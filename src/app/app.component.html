@@ -1,3 +1,36 @@
-<h1>
-  {{title}}
-</h1>
+<div *ngIf="!(user | async)?.uid; else userBlock">
+  <button class="btn btn-primary" (click)="login()">Login</button>
+</div>
+<ng-template #userBlock>
+
+  {{ (user | async)?.displayName }}
+  <div>
+    <button class="btn btn-default" (click)="logout()">Logout</button>
+  </div>
+
+  <br />
+  <div class="panel panel-primary">
+    <div class="panel-heading">Calcular Cambio de Pesos a Dolares</div>
+    <div class="panel-body">
+      <form #f="ngForm" (ngSubmit)="calculate()">
+        <div class="form-group">
+          <label for="cantidad">Cantidad (MXN)</label>
+          <input type="number" class="form-control" id="cantidad" [(ngModel)]="ammount" name="ammount" required>
+        </div>
+        <button type="submit" class="btn btn-success" >Submit</button>
+      </form>
+    </div>
+    <div class="panel-footer">
+      <div *ngIf="loading">
+         <img src="/assets/ajax-loader.gif" />
+      </div>
+      <div *ngIf="!loading && !showRenew && calculatedRate ">
+        The calculated rate is: <strong>{{ calculatedRate }} USD</strong>
+      </div>
+      <div *ngIf="showRenew">
+        <strong>Tu suscripcion ha caducado</strong>
+        <button type="button" class="btn btn-info" (click)="renew()">Renovar Suscripcion</button>
+       </div>
+    </div>
+  </div>
+</ng-template>
